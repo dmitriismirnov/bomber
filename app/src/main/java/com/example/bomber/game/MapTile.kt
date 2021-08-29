@@ -6,21 +6,17 @@ import com.example.bomber.R
 interface MapTile {
 
 	val drawableRes: Int
+	val passable: Boolean
 	val afterExplode: MapTile?
 }
 
-enum class Grass(
+enum class Tiles(
 	@DrawableRes override val drawableRes: Int,
+	override val passable: Boolean,
 	override val afterExplode: MapTile? = null,
 ) : MapTile {
-	DRY(drawableRes = R.drawable.dry_grass),
-	GREEN(drawableRes = R.drawable.green_grass, afterExplode = DRY),
-}
-
-enum class Obstacle(
-	@DrawableRes override val drawableRes: Int,
-	override val afterExplode: MapTile? = null,
-) : MapTile {
-	WEAK_WALL(drawableRes = R.drawable.ground_rocks, afterExplode = Grass.GREEN),
-	STRONG_WALL(drawableRes = R.drawable.wall_rock),
+	DRY_GRASS(drawableRes = R.drawable.dry_grass, passable = true),
+	GREEN_GRASS(drawableRes = R.drawable.green_grass, passable = true, afterExplode = DRY_GRASS),
+	WEAK_WALL(drawableRes = R.drawable.ground_rocks, passable = false, afterExplode = GREEN_GRASS),
+	STRONG_WALL(drawableRes = R.drawable.wall_rock, passable = false),
 }

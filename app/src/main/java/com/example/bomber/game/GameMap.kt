@@ -29,7 +29,7 @@ data class GameMap(
 				for (x in 0..9) {
 					line += MapCell(
 						location = Location(x = x, y = y),
-						tile = Grass.GREEN,
+						tile = Tiles.GREEN_GRASS,
 					)
 				}
 				map += line
