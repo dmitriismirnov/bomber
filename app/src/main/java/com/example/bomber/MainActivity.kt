@@ -33,9 +33,7 @@ import com.example.bomber.ui.Controls
 import com.example.bomber.ui.theme.BomberTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.min
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,13 +60,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun GamePlayState.backgroundColor(): Color = when (this) {
-	GamePlayState.PAUSE -> Color.Gray
+	GamePlayState.PAUSE   -> Color.Gray
 	GamePlayState.RUNNING -> MaterialTheme.colors.background
-	GamePlayState.WIN -> Color.Green
-	GamePlayState.LOOSE -> Color.Red
+	GamePlayState.WIN     -> Color.Green
+	GamePlayState.LOOSE   -> Color.Red
 }
 
-@ExperimentalTime
 @Composable
 fun GameMap() {
 	val gameViewModel: GameViewModel = hiltViewModel()

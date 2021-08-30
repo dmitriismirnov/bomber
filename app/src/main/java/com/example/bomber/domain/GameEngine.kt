@@ -14,8 +14,6 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 class GameEngine @Inject constructor() {
 
@@ -23,7 +21,6 @@ class GameEngine @Inject constructor() {
 
 	private var heroMoveDirection = MoveDirection.IDLE
 
-	@ExperimentalTime
 	val gameFlow = flow {
 		while (true) {
 			emit(gameState)
@@ -31,11 +28,10 @@ class GameEngine @Inject constructor() {
 		}
 	}
 
-	@ExperimentalTime
 	val updates = flow {
 		while (true) {
 			emit(Unit)
-			delay(Duration.seconds(1))
+			delay(PERIODIC_UPDATE_RATE)
 		}
 	}
 		.onEach { runUpdates() }
@@ -210,6 +206,7 @@ class GameEngine @Inject constructor() {
 	}
 
 	private companion object {
-		@ExperimentalTime val GAME_UPDATE_RATE: Duration = Duration.milliseconds(100)
+		const val GAME_UPDATE_RATE: Long = 100
+		const val PERIODIC_UPDATE_RATE: Long = 1000
 	}
 }

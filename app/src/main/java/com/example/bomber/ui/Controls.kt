@@ -29,9 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bomber.R
 import com.example.bomber.game.GamePlayState
 import com.example.bomber.presentation.GameViewModel
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 @Composable
 fun Controls() {
 
@@ -167,8 +165,8 @@ fun Controls() {
 					onPress = {
 						when (gameState.value.playState) {
 							GamePlayState.RUNNING -> gameViewModel.pauseGame()
-							GamePlayState.PAUSE -> gameViewModel.runGame()
-							else -> gameViewModel.restartGame()
+							GamePlayState.PAUSE   -> gameViewModel.runGame()
+							else                  -> gameViewModel.restartGame()
 
 						}
 					}

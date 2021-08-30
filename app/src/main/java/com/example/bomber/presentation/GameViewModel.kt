@@ -10,17 +10,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
-import kotlin.time.ExperimentalTime
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
 	private val gameEngine: GameEngine,
 ) : ViewModel() {
 
-	@ExperimentalTime
 	val gameState: StateFlow<GameState> = gameEngine.gameFlow.stateIn(viewModelScope, SharingStarted.Lazily, GameState.INITIAL)
 
-	@ExperimentalTime
 	val gameUpdates = gameEngine.updates.launchIn(viewModelScope)
 
 	fun pressUp() {
