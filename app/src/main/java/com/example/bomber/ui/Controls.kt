@@ -29,7 +29,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bomber.R
 import com.example.bomber.game.GamePlayState
 import com.example.bomber.presentation.GameViewModel
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 @Composable
 fun Controls() {
 
