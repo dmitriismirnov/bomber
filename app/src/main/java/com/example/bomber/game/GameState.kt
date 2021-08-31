@@ -11,19 +11,19 @@ data class GameState(
 		val INITIAL: GameState = GameState(
 			map = GameMap.EMPTY,
 			bomberman = Bomberman(
-				location = Location(x = 0, y = 0)
+				location = Location(x = 0f, y = 0f)
 			),
 			enemies = listOf(
 				Enemy(
-					location = Location(1, 5),
+					location = Location(1f, 5f),
 					type = EnemyType.ALIEN,
 				),
 				Enemy(
-					location = Location(2, 3),
+					location = Location(2f, 3f),
 					type = EnemyType.WITCH,
 				),
 				Enemy(
-					location = Location(9, 9),
+					location = Location(9f, 9f),
 					type = EnemyType.GHOST,
 				)
 			),

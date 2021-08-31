@@ -154,6 +154,9 @@ class GameEngine @Inject constructor() {
 			it.location == this
 		}
 
+		val y = y.toInt()
+		val x = x.toInt()
+
 		val map = gameState.map.cells
 		val tileAfterExplode = map[y][x].tile.afterExplode
 		if (tileAfterExplode != null) {
@@ -195,10 +198,10 @@ class GameEngine @Inject constructor() {
 		var y = location.y
 
 		when (direction) {
-			MoveDirection.UP    -> y = max(0, y - 1)
-			MoveDirection.DOWN  -> y = min(9, y + 1)
-			MoveDirection.LEFT  -> x = max(0, x - 1)
-			MoveDirection.RIGHT -> x = min(9, x + 1)
+			MoveDirection.UP    -> y = max(0f, y - 0.1f)
+			MoveDirection.DOWN  -> y = min(9f, y + 0.1f)
+			MoveDirection.LEFT  -> x = max(0f, x - 0.1f)
+			MoveDirection.RIGHT -> x = min(9f, x + 0.1f)
 			MoveDirection.IDLE  -> Unit
 		}
 

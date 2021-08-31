@@ -1,8 +1,8 @@
 package com.example.bomber.game
 
 data class Location(
-	val x: Int,
-	val y: Int,
+	val x: Float,
+	val y: Float,
 ) {
 	fun explosionArea(): List<Location> {
 		val area = mutableListOf(this)

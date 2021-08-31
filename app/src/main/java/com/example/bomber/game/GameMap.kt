@@ -28,7 +28,7 @@ data class GameMap(
 				var line = arrayOf<MapCell>()
 				for (x in 0..9) {
 					line += MapCell(
-						location = Location(x = x, y = y),
+						location = Location(x = x.toFloat(), y = y.toFloat()),
 						tile = Tiles.GREEN_GRASS,
 					)
 				}
