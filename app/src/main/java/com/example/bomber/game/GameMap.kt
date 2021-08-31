@@ -17,26 +17,4 @@ data class GameMap(
 	override fun hashCode(): Int {
 		return cells.contentDeepHashCode()
 	}
-
-	companion object {
-		val EMPTY: GameMap = generateEmptyMap()
-
-		private fun generateEmptyMap(): GameMap {
-			var map = arrayOf<Array<MapCell>>()
-
-			for (y in 0..9) {
-				var line = arrayOf<MapCell>()
-				for (x in 0..9) {
-					line += MapCell(
-						location = Location(x = x.toFloat(), y = y.toFloat()),
-						tile = Tiles.GREEN_GRASS,
-					)
-				}
-				map += line
-			}
-
-			return GameMap(map)
-		}
-
-	}
 }

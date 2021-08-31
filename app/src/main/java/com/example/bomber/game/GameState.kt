@@ -1,5 +1,7 @@
 package com.example.bomber.game
 
+import com.example.bomber.game.maps.FirstMap
+
 data class GameState(
 	val map: GameMap,
 	val bomberman: Bomberman,
@@ -9,7 +11,7 @@ data class GameState(
 ) {
 	companion object {
 		val INITIAL: GameState = GameState(
-			map = GameMap.EMPTY,
+			map = FirstMap,
 			bomberman = Bomberman(
 				location = Location(x = 0f, y = 0f)
 			),
