@@ -18,7 +18,9 @@ class GameViewModel @Inject constructor(
 
 	val gameState: StateFlow<GameState> = gameEngine.gameFlow.stateIn(viewModelScope, SharingStarted.Lazily, GameState.INITIAL)
 
-	val gameUpdates = gameEngine.updates.launchIn(viewModelScope)
+	// TODO: use coroutines in proper way
+	val moveUpdates = gameEngine.moveUpdates.launchIn(viewModelScope)
+	val bombUpdates = gameEngine.bombsUpdates.launchIn(viewModelScope)
 
 	fun pressUp() {
 		gameEngine.goUp()
