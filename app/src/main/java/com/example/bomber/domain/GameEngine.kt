@@ -8,6 +8,7 @@ import com.example.bomber.game.GameMap
 import com.example.bomber.game.GamePlayState
 import com.example.bomber.game.GameState
 import com.example.bomber.game.Location
+import com.example.bomber.game.MapTile
 import com.example.bomber.game.MoveDirection
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -220,16 +221,45 @@ class GameEngine @Inject constructor() {
 	private fun calculateNewLocation(direction: MoveDirection, location: Location): Location {
 		var x = location.x
 		var y = location.y
+		var adjustment = 0f
 
 		when (direction) {
-			MoveDirection.UP    -> y = max(0f, y - MOVE_INCREMENT_VALUE)
-			MoveDirection.DOWN  -> y = min(9f, y + MOVE_INCREMENT_VALUE)
-			MoveDirection.LEFT  -> x = max(0f, x - MOVE_INCREMENT_VALUE)
-			MoveDirection.RIGHT -> x = min(9f, x + MOVE_INCREMENT_VALUE)
+			MoveDirection.UP    -> {
+				y = max(0f, y - MOVE_INCREMENT_VALUE)
+				adjustment = -HALF_TILE_SIZE
+			}
+			MoveDirection.DOWN  -> {
+				y = min(9f, y + MOVE_INCREMENT_VALUE)
+				adjustment = HALF_TILE_SIZE
+			}
+			MoveDirection.LEFT  -> {
+				x = max(0f, x - MOVE_INCREMENT_VALUE)
+				adjustment = -HALF_TILE_SIZE
+			}
+			MoveDirection.RIGHT -> {
+				x = min(9f, x + MOVE_INCREMENT_VALUE)
+				adjustment = HALF_TILE_SIZE
+			}
 			MoveDirection.IDLE  -> Unit
 		}
 
+		val checkX = (x + adjustment).coerceIn(0f, 9f)
+		if (!Location(checkX, location.y).tile().passable) {
+			x = location.x
+		}
+
+		val checkY = (y + adjustment).coerceIn(0f, 9f)
+		if (!Location(location.x, checkY).tile().passable) {
+			y = location.y
+		}
+
 		return Location(x, y)
+	}
+
+	private fun Location.tile(): MapTile {
+		val y = y.roundToInt()
+		val x = x.roundToInt()
+		return gameState.map.cells[y][x].tile
 	}
 
 	private companion object {
