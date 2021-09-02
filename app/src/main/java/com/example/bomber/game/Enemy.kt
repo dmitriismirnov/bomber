@@ -1,6 +1,7 @@
 package com.example.bomber.game
 
 import androidx.annotation.DrawableRes
+import androidx.compose.ui.graphics.Color
 import com.example.bomber.R
 
 data class Enemy(
@@ -9,11 +10,12 @@ data class Enemy(
 ) {
 	@DrawableRes
 	val drawableRes = type.drawableRes
+	val tint = type.tint
 }
 
-enum class EnemyType(@DrawableRes val drawableRes: Int) {
-	GHOST(R.drawable.ghost),
-	WITCH(R.drawable.witch),
-	ALIEN(R.drawable.alien),
+enum class EnemyType(@DrawableRes val drawableRes: Int, val tint: Color? = null) {
+	GHOST(R.drawable.ghost, Color.Gray),
+	WITCH(R.drawable.witch, Color.LightGray),
+	ALIEN(R.drawable.alien, Color.Black),
 
 }

@@ -17,19 +17,23 @@ data class GameState(
 			),
 			enemies = listOf(
 				Enemy(
-					location = Location(1f, 5f),
+					location = Location(x = 7f, y = 4f),
 					type = EnemyType.ALIEN,
 				),
 				Enemy(
-					location = Location(2f, 3f),
+					location = Location(x = 3f, y = 7f),
+					type = EnemyType.ALIEN,
+				),
+				Enemy(
+					location = Location(x = 2f, y = 3f),
 					type = EnemyType.WITCH,
 				),
 				Enemy(
-					location = Location(9f, 9f),
+					location = Location(x = 9f, y = 9f),
 					type = EnemyType.GHOST,
 				)
 			),
-			playState = GamePlayState.RUNNING,
+			playState = GamePlayState.PAUSE,
 			bombs = emptyList()
 		)
 	}

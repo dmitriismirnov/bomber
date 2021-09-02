@@ -16,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.platform.LocalContext
@@ -90,9 +91,13 @@ fun GameMap() {
 
 		val bombermanImage = ImageBitmap.imageResource(
 			res = context.resources,
-			id = Bomberman.drawableRes
+			id = Bomberman.drawableRes,
 		)
-		drawImage(location = gameState.bomberman.location, image = bombermanImage)
+		drawImage(
+			location = gameState.bomberman.location,
+			image = bombermanImage,
+			tint = Color.Yellow,
+		)
 
 		val bombImage = ImageBitmap.imageResource(
 			res = context.resources,
@@ -126,7 +131,8 @@ fun GameMap() {
 				image = ImageBitmap.imageResource(
 					res = context.resources,
 					id = enemy.drawableRes
-				)
+				),
+				tint = enemy.tint,
 			)
 		}
 
@@ -136,9 +142,12 @@ fun GameMap() {
 fun DrawScope.drawImage(
 	location: Location,
 	image: ImageBitmap,
+	tint: Color? = null,
 ) {
 	val size = min(size.height, size.width)
 	val step = size / 10
+
+	val colorFilter = tint?.let(ColorFilter::tint)
 
 	drawImage(
 		image = image,
@@ -150,5 +159,6 @@ fun DrawScope.drawImage(
 			width = step.toInt(),
 			height = step.toInt()
 		),
+		colorFilter = colorFilter,
 	)
 }
