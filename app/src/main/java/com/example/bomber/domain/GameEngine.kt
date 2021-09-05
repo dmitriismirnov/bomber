@@ -8,7 +8,7 @@ import com.example.bomber.game.GameMap
 import com.example.bomber.game.GamePlayState
 import com.example.bomber.game.GameState
 import com.example.bomber.game.Location
-import com.example.bomber.game.MapTile
+import com.example.bomber.game.MapCell
 import com.example.bomber.game.MoveDirection
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -16,8 +16,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import javax.inject.Inject
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.roundToInt
 
 class GameEngine @Inject constructor() {
@@ -77,8 +75,8 @@ class GameEngine @Inject constructor() {
 		val bombs = gameState.bombs.toMutableList()
 		val location = gameState.bomberman.location
 		val tileLocation = location.copy(
-			x = location.x.roundToInt().toFloat(),
-			y = location.y.roundToInt().toFloat()
+			x = location.x,
+			y = location.y,
 		)
 
 		bombs.add(
@@ -172,15 +170,14 @@ class GameEngine @Inject constructor() {
 			areLocationsMet(enemy.location, this)
 		}
 
-		val y = y.roundToInt()
-		val x = x.roundToInt()
-
 		val map = gameState.map.cells
-		val tileAfterExplode = map[y][x].tile.afterExplode
-		if (tileAfterExplode != null) {
-			map[y][x] = map[y][x].copy(
-				tile = tileAfterExplode
-			)
+
+		cells().forEach { cell ->
+			cell.tile.afterExplode?.let { tile ->
+				val x = cell.location.x.roundToInt()
+				val y = cell.location.y.roundToInt()
+				map[y][x] = map[y][x].copy(tile = tile)
+			}
 		}
 
 		gameState = gameState.copy(
@@ -204,11 +201,13 @@ class GameEngine @Inject constructor() {
 	}
 
 	private fun areLocationsMet(first: Location, second: Location): Boolean {
-		val xCross = Range.create(first.x - HALF_TILE_SIZE, first.x + HALF_TILE_SIZE).contains(second.x)
-		val yCross = Range.create(first.y - HALF_TILE_SIZE, first.y + HALF_TILE_SIZE).contains(second.y)
+		val xCross = first.x.unitRange().contains(second.x - UNIT_RADIUS) || first.x.unitRange().contains(second.x + UNIT_RADIUS)
+		val yCross = first.y.unitRange().contains(second.y - UNIT_RADIUS) || first.y.unitRange().contains(second.y + UNIT_RADIUS)
 
 		return xCross && yCross
 	}
+
+	private fun Float.unitRange() = Range.create(this - UNIT_RADIUS, this + UNIT_RADIUS)
 
 	private fun checkWin() {
 		if (gameState.enemies.isEmpty()) {
@@ -221,53 +220,54 @@ class GameEngine @Inject constructor() {
 	private fun calculateNewLocation(direction: MoveDirection, location: Location): Location {
 		var x = location.x
 		var y = location.y
-		var adjustment = 0f
+		var xAdjustment = 0f
+		var yAdjustment = 0f
 
 		when (direction) {
 			MoveDirection.UP    -> {
-				y = max(0f, y - MOVE_INCREMENT_VALUE)
-				adjustment = -HALF_TILE_SIZE
+				y = (y - MOVE_INCREMENT_VALUE).coerceIn(0f, 9f)
+				yAdjustment = -UNIT_RADIUS
 			}
 			MoveDirection.DOWN  -> {
-				y = min(9f, y + MOVE_INCREMENT_VALUE)
-				adjustment = HALF_TILE_SIZE
+				y = (y + MOVE_INCREMENT_VALUE).coerceIn(0f, 9f)
+				yAdjustment = UNIT_RADIUS
 			}
 			MoveDirection.LEFT  -> {
-				x = max(0f, x - MOVE_INCREMENT_VALUE)
-				adjustment = -HALF_TILE_SIZE
+				x = (x - MOVE_INCREMENT_VALUE).coerceIn(0f, 9f)
+				xAdjustment = -UNIT_RADIUS
 			}
 			MoveDirection.RIGHT -> {
-				x = min(9f, x + MOVE_INCREMENT_VALUE)
-				adjustment = HALF_TILE_SIZE
+				x = (x + MOVE_INCREMENT_VALUE).coerceIn(0f, 9f)
+				xAdjustment = UNIT_RADIUS
 			}
 			MoveDirection.IDLE  -> Unit
 		}
 
-		val checkX = (x + adjustment).coerceIn(0f, 9f)
-		if (!Location(checkX, location.y).tile().passable) {
-			x = location.x
-		}
+		val checkX = (x + xAdjustment).coerceIn(0f, 9f)
+		val checkY = (y + yAdjustment).coerceIn(0f, 9f)
 
-		val checkY = (y + adjustment).coerceIn(0f, 9f)
-		if (!Location(location.x, checkY).tile().passable) {
+		if (Location(checkX, checkY).cells().any {
+				!it.tile.passable
+		}) {
+			x = location.x
 			y = location.y
 		}
 
 		return Location(x, y)
 	}
 
-	private fun Location.tile(): MapTile {
-		val y = y.roundToInt()
-		val x = x.roundToInt()
-		return gameState.map.cells[y][x].tile
-	}
+	private fun Location.cells(): List<MapCell> =
+		gameState.map.cells.flatMap { line ->
+			line.filter { cell ->
+				areLocationsMet(this, cell.location)
+			}
+		}
 
 	private companion object {
 		const val GAME_UPDATE_RATE: Long = 1000 / 60
 		const val MOVE_UPDATE_RATE: Long = 100
 		const val BOMBS_UPDATE_RATE: Long = 1000
 		const val MOVE_INCREMENT_VALUE = 0.1f
-		const val TILE_SIZE = 1f
-		const val HALF_TILE_SIZE = TILE_SIZE / 2
+		const val UNIT_RADIUS = 0.35f
 	}
 }
