@@ -46,7 +46,7 @@ fun Controls() {
 
 	val bombSize = 100.dp
 	val playSize = 80.dp
-	val arrowSize = 50.dp
+	val arrowSize = 80.dp
 
 	ConstraintLayout(
 		modifier = Modifier
@@ -151,14 +151,10 @@ fun Controls() {
 		)
 
 		Image(modifier = Modifier
-
 			.constrainAs(playStateRef) {
 				bottom.linkTo(upRef.top)
-//                bottom.linkTo(parent.bottom)
-				start.linkTo(upRef.end)
-				end.linkTo(bombRef.start)
+				centerHorizontallyTo(parent)
 			}
-
 			.size(playSize)
 			.pointerInput(Unit) {
 				detectTapGestures(
