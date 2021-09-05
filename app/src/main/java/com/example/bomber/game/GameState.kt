@@ -33,7 +33,7 @@ data class GameState(
 					type = EnemyType.GHOST,
 				)
 			),
-			playState = GamePlayState.PAUSE,
+			playState = GamePlayState.RUNNING,
 			bombs = emptyList()
 		)
 	}
